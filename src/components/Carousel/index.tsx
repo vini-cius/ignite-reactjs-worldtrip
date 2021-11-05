@@ -17,7 +17,7 @@ interface CarouselProps {
   continents: {
     slug: string;
     name: string;
-    description: string;
+    subtitle: string;
     image: string;
   }[];
 }
@@ -57,13 +57,14 @@ export function Carousel({ continents }: CarouselProps) {
               justify="center"
               align="center"
               direction="column"
+              p="12"
             >
               <Text color="light.heading" fontWeight="500" fontSize="xxx-large" cursor="pointer">
                 {continent.name}
               </Text>
 
               <Text color="light.heading" fontWeight="500" fontSize="x-large" cursor="pointer">
-                {continent.description}
+                {continent.subtitle}
               </Text>
             </Flex>
           </Link>

@@ -3,12 +3,34 @@ import { AiOutlineInfoCircle } from "react-icons/ai";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { Header } from "../../components/Header";
+import { api } from "../../services/api";
 
-export default function Contients(props) {
+interface Continent {
+  slug: string;
+  name: string;
+  subtitle: string;
+  image: string;
+  description: string;
+  quantity_countries: number;
+  quantity_languages: number;
+  quantity_popular_cities: number;
+  popular_cities: {
+    country: string;
+    city: string;
+    image: string;
+    flag: string;
+  }[];
+}
+
+interface ContinentProps {
+  continent: Continent;
+}
+
+export default function Contients({ continent }: ContinentProps) {
   return (
     <>
       <Head>
-        <title>wordtrip | {props.continent}</title>
+        <title>wordtrip | {continent.name}</title>
       </Head>
 
       <Flex
@@ -24,7 +46,7 @@ export default function Contients(props) {
           <Box
             as="section"
             h={500}
-            backgroundImage="url('https://images.unsplash.com/photo-1611350724149-783acd9b510d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=870&q=80')"
+            backgroundImage={`url(${continent.image})`}
             backgroundSize="cover"
             backgroundPosition="center"
           >
@@ -36,7 +58,7 @@ export default function Contients(props) {
               direction="column"
             >
               <Text as="h1" ml="20" mb="20" color="light.heading" fontWeight="500" fontSize="xxx-large">
-                América do Norte
+                {continent.name}
               </Text>
             </Flex>
           </Box>
@@ -45,23 +67,23 @@ export default function Contients(props) {
           <Box as="section" px="20" my="10">
             <SimpleGrid columns={2} spacing={10} color="darkblue.text">
               <Text>
-                A Europa é, por convenção, um dos seis continentes do mundo.Compreendendo a península ocidental da Eurásia, a Europa geralmente divide-se da Ásia a leste pela divisória de águas dos montes Urais, o rio Ural, o mar Cáspio, o Cáucaso, e o mar Negro a sudeste
+                {continent.description}
               </Text>
 
               <Flex align="center" justify="center">
                 <SimpleGrid columns={3} spacing={17}>
                   <Box textAlign="center">
-                    <Text color="highlight.500" fontSize="5xl" fontWeight="500">50</Text>
+                    <Text color="highlight.500" fontSize="5xl" fontWeight="500">{continent.quantity_countries}</Text>
                     <Text fontWeight="500">países</Text>
                   </Box>
 
                   <Box textAlign="center">
-                    <Text color="highlight.500" fontSize="5xl" fontWeight="500">60</Text>
+                    <Text color="highlight.500" fontSize="5xl" fontWeight="500">{continent.quantity_languages}</Text>
                     <Text fontWeight="500">línguas</Text>
                   </Box>
 
                   <Box textAlign="center">
-                    <Text color="highlight.500" fontSize="5xl" fontWeight="500">27</Text>
+                    <Text color="highlight.500" fontSize="5xl" fontWeight="500">{continent.quantity_popular_cities}</Text>
                     <Text as="span" fontWeight="500">
                       cidades +100
                       <Tooltip label="Cidades mais visitadas" placement="bottom-end">
@@ -78,33 +100,29 @@ export default function Contients(props) {
             <Text as="h1" fontSize="2xl" color="dark.heading" fontWeight="bold">Cidades +100</Text>
 
             <SimpleGrid minChildWidth="256px" spacing={10} mt="10">
-              <Box borderWidth="1px" borderColor="highlight.100" borderRadius="lg" overflow="hidden">
-                <Image src="https://images.unsplash.com/photo-1581430872221-d1cfed785922?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80" alt="" />
+              {continent.popular_cities.map((city) => (
+                <Box key={city.city} w="256px" borderWidth="1px" borderColor="highlight.100" borderRadius="lg" overflow="hidden">
+                  <Image src={city.image} alt={city.city} h="173" w="100%" />
 
-                <Box
-                  p="4"
-                  as="h4"
-                  fontSize="2rem"
-                  color="dark.heading"
-                  fontWeight="bold"
-                >
-                  Londres
+                  <Box
+                    p="4"
+                    as="h4"
+                    fontSize="2rem"
+                    color="dark.heading"
+                    fontWeight="bold"
+                  >
+                    {city.city}
+                  </Box>
+
+                  <Flex align="center" justify="space-between" p={[0, 4, 4, 4]}>
+                    <Text as="span" color="dark.info.500" fontSize="1rem">
+                      {city.country}
+                    </Text>
+
+                    <Avatar src={city.flag} />
+                  </Flex>
                 </Box>
-
-                <Flex align="center" justify="space-between" p={[0, 4, 4, 4]}>
-                  <Text as="span" color="dark.info.500" fontSize="1rem">
-                    Reino Unido
-                  </Text>
-
-                  <Avatar src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Flag_of_the_United_Kingdom_%282-3%29.svg/1200px-Flag_of_the_United_Kingdom_%282-3%29.svg.png" />
-                </Flex>
-
-              </Box>
-
-              <Box bg="tomato" height="279px"></Box>
-              <Box bg="tomato" height="279px"></Box>
-              <Box bg="tomato" height="279px"></Box>
-              <Box bg="tomato" height="279px"></Box>
+              ))}
             </SimpleGrid>
           </Box>
         </Box>
@@ -116,7 +134,13 @@ export default function Contients(props) {
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const { slug } = params;
 
-  return {
-    props: { continent: slug },
-  };
+  try {
+    const continent = await api.get(`/continents/${slug}`);
+
+    return {
+      props: { continent: continent.data },
+    };
+  } catch (error) {
+    alert(error.message);
+  }
 };
