@@ -13,6 +13,10 @@ export function Header({ subpage }: HeaderProps) {
       h="20"
       align="center"
       justify="center"
+      bg="background"
+      maxWidth={1440}
+      mx="auto"
+      py="2"
     >
       {subpage && (
         <Box as="span" cursor="pointer" mr="auto" ml="2">

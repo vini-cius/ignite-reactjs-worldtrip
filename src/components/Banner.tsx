@@ -16,8 +16,8 @@ export function Banner() {
         <Flex
           w="100%"
           justify="space-between"
-          px={["16", "16", "20"]}
-          pt="20"
+          px={["16", "16", "18", "20"]}
+          pt={["14", "14", "18", "20"]}
         >
           <Stack spacing="4">
             <Text
@@ -44,6 +44,7 @@ export function Banner() {
             transform="rotate(3deg)"
             w={418}
             h={270}
+            display={["none", "none", "block"]}
           />
         </Flex>
       </Flex>

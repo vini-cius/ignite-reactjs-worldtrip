@@ -63,7 +63,7 @@ export function Carousel({ continents }: CarouselProps) {
                 {continent.name}
               </Text>
 
-              <Text color="light.heading" fontWeight="500" fontSize="x-large" cursor="pointer">
+              <Text textAlign="center" color="light.heading" fontWeight="500" fontSize="x-large" cursor="pointer">
                 {continent.subtitle}
               </Text>
             </Flex>

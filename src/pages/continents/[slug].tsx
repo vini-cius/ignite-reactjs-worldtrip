@@ -1,4 +1,4 @@
-import { Flex, Box, Text, SimpleGrid, Tooltip, Avatar, Image } from "@chakra-ui/react";
+import { Flex, Box, Text, SimpleGrid, useBreakpointValue, Tooltip, Avatar, Image } from "@chakra-ui/react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
@@ -27,6 +27,11 @@ interface ContinentProps {
 }
 
 export default function Contients({ continent }: ContinentProps) {
+  const isWideVersion = useBreakpointValue({
+    base: false,
+    lg: true
+  })
+
   return (
     <>
       <Head>
@@ -64,8 +69,8 @@ export default function Contients({ continent }: ContinentProps) {
           </Box>
 
 
-          <Box as="section" px="20" my="10">
-            <SimpleGrid columns={2} spacing={10} color="darkblue.text">
+          <Box as="section" px={["5", "5", "20"]} my="10">
+            <SimpleGrid minChildWidth="220px" spacing="40px" color="darkblue.text">
               <Text>
                 {continent.description}
               </Text>
@@ -96,10 +101,10 @@ export default function Contients({ continent }: ContinentProps) {
             </SimpleGrid>
           </Box>
 
-          <Box as="section" px="20" my="10">
+          <Box as="section" px={["5", "5", "20"]} my="10">
             <Text as="h1" fontSize="2xl" color="dark.heading" fontWeight="bold">Cidades +100</Text>
 
-            <SimpleGrid minChildWidth="256px" spacing={10} mt="10">
+            <SimpleGrid minChildWidth="256px" spacing={5} mt="10">
               {continent.popular_cities.map((city) => (
                 <Box key={city.city} w="256px" borderWidth="1px" borderColor="highlight.100" borderRadius="lg" overflow="hidden">
                   <Image src={city.image} alt={city.city} h="173" w="100%" />
@@ -114,12 +119,12 @@ export default function Contients({ continent }: ContinentProps) {
                     {city.city}
                   </Box>
 
-                  <Flex align="center" justify="space-between" p={[0, 4, 4, 4]}>
+                  <Flex align="center" justify="space-between" p={["2", "4", "4", "4"]}>
                     <Text as="span" color="dark.info.500" fontSize="1rem">
                       {city.country}
                     </Text>
 
-                    <Avatar src={city.flag} />
+                    <Avatar src={city.flag} size={isWideVersion ? 'md' : 'sm'} />
                   </Flex>
                 </Box>
               ))}
